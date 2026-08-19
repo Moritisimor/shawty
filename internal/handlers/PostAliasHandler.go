@@ -33,7 +33,7 @@ func PostAliasHandler(repo *repo.URLAliasRepo) http.HandlerFunc {
 			return
 		}
 
-		id, err := repo.PostURLAlias(dto, r.Context()) 
+		id, err := repo.PostURLAlias(dto, r.Context())
 		if err != nil {
 			if errors.Is(err, sqlite3.CONSTRAINT) {
 				helpers.SendJSON(w, http.StatusConflict, helpers.J{

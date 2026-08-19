@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/Moritisimor/shawty/internal/handlers"
 	"github.com/Moritisimor/shawty/internal/helpers"
@@ -21,9 +22,15 @@ func main() {
 	dbPath := helpers.GetEnvOr("DB_PATH", "shawty.db")
 	address := helpers.GetEnvOr("ADDRESS", "0.0.0.0")
 	port := helpers.GetEnvOr("PORT", "8080")
+	sleepTimeMins := 1
+
+	deleteAfterHours, err := strconv.ParseInt(helpers.GetEnvOr("DELETE_AFTER_HOURS", "24"), 10, 64)
+	if err != nil {
+		log.Fatalf("Error while parsing DELETE_AFTER_HOURS envvar: %s\n", err.Error())
+	}
 
 	log.Printf("Using database '%s'\n", dbPath)
-	repo, err := repo.New(dbPath)
+	repo, err := repo.New(dbPath, deleteAfterHours)
 	if err != nil {
 		log.Fatalf("%s\n", err.Error())
 	}
@@ -41,6 +48,8 @@ func main() {
 	}
 
 	http.Handle("GET /", middleware.Logging(http.FileServer(http.FS(siteFS))))
+
+	helpers.StartCleanerRoutine(repo, sleepTimeMins)
 
 	log.Printf("Listening on http://%s:%s\n", address, port)
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), nil); err != nil {

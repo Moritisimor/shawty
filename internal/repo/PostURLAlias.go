@@ -2,18 +2,20 @@ package repo
 
 import (
 	"context"
+	"time"
 
 	"github.com/Moritisimor/shawty/internal/models"
 )
 
 func (repo *URLAliasRepo) PostURLAlias(
-	urlAlias models.URLAliasDTO, 
+	urlAlias models.URLAliasDTO,
 	ctx context.Context,
 ) (int64, error) {
+	rn := time.Now().Unix()
 	results, err := repo.db.ExecContext(
 		ctx,
-		"INSERT INTO URLAliases (Alias, URL) VALUES (?, ?)",
-		urlAlias.Alias, urlAlias.URL,
+		"INSERT INTO URLAliases (Alias, URL, DeleteAt) VALUES (?, ?, ?)",
+		urlAlias.Alias, urlAlias.URL, rn+(repo.deleteAfterHours*3600),
 	)
 
 	if err != nil {

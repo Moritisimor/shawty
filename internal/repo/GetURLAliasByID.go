@@ -12,19 +12,21 @@ func (u *URLAliasRepo) GetURLAliasByID(
 ) (models.URLAlias, error) {
 	row := u.db.QueryRowContext(
 		ctx,
-		"SELECT ID, Alias, URL FROM URLAliases WHERE id = ?", queryID,
+		"SELECT ID, Alias, URL, DeleteAt FROM URLAliases WHERE id = ?", queryID,
 	)
 
 	var id uint
 	var alias, url string
+	var deleteAt int64
 
-	if err := row.Scan(&id, &alias, &url); err != nil {
+	if err := row.Scan(&id, &alias, &url, &deleteAt); err != nil {
 		return models.URLAlias{}, err
 	}
 
 	return models.URLAlias{
-		ID:    id,
-		Alias: alias,
-		URL:   url,
+		ID:       id,
+		Alias:    alias,
+		URL:      url,
+		DeleteAt: deleteAt,
 	}, nil
 }
