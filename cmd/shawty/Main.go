@@ -15,8 +15,9 @@ func main() {
 		log.Fatalf("%s\n", err.Error())
 	}
 
-	http.HandleFunc("/api/status", handlers.StatusHandler)
-	http.HandleFunc("/api/link/{link}", handlers.RedirectHandler(repo))
+	http.HandleFunc("GET /api/status", handlers.StatusHandler)
+	http.HandleFunc("GET /api/link/{link}", handlers.RedirectHandler(repo))
+	http.HandleFunc("POST /api/alias", handlers.PostAliasHandler(repo))
 
 	http.ListenAndServe(":8080", nil)
 }

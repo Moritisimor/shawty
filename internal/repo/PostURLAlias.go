@@ -7,7 +7,7 @@ import (
 )
 
 func (repo *URLAliasRepo) PostURLAlias(
-	urlAlias models.URLAlias, 
+	urlAlias models.URLAliasDTO, 
 	ctx context.Context,
 ) error {
 	_, err := repo.db.ExecContext(
