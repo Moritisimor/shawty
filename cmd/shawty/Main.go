@@ -22,11 +22,15 @@ func main() {
 	dbPath := helpers.GetEnvOr("DB_PATH", "shawty.db")
 	address := helpers.GetEnvOr("ADDRESS", "0.0.0.0")
 	port := helpers.GetEnvOr("PORT", "8080")
-	sleepTimeMins := 1
 
 	deleteAfterHours, err := strconv.ParseInt(helpers.GetEnvOr("DELETE_AFTER_HOURS", "24"), 10, 64)
 	if err != nil {
 		log.Fatalf("Error while parsing DELETE_AFTER_HOURS envvar: %s\n", err.Error())
+	}
+
+	sleepTimeMins, err := strconv.Atoi(helpers.GetEnvOr("SLEEP_TIME_MINS", "20"))
+	if err != nil {
+		log.Fatalf("Error while parsing SLEEP_TIME_MINS envvar: %s\n", err.Error())
 	}
 
 	log.Printf("Using database '%s'\n", dbPath)
