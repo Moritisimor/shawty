@@ -1,7 +1,10 @@
 package main
 
 import (
+	"embed"
+	_ "embed"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 
@@ -10,6 +13,9 @@ import (
 	"github.com/Moritisimor/shawty/internal/middleware"
 	"github.com/Moritisimor/shawty/internal/repo"
 )
+
+//go:embed site
+var staticFiles embed.FS
 
 func main() {
 	dbPath := helpers.GetEnvOr("DB_PATH", "shawty.db")
@@ -25,11 +31,16 @@ func main() {
 	log.Printf("Connecting to database and migration successful\n")
 	defer repo.Close()
 
-	http.Handle("GET /api/status", middleware.Logging(handlers.StatusHandler))
+	http.Handle("GET /api/status", middleware.Logging(http.HandlerFunc(handlers.StatusHandler)))
 	http.Handle("GET /link/{link}", middleware.Logging(handlers.RedirectHandler(repo)))
 	http.Handle("POST /api/alias", middleware.Logging(handlers.PostAliasHandler(repo)))
 
-	http.Handle("/", http.FileServer(http.Dir("./static")))
+	siteFS, err := fs.Sub(staticFiles, "site")
+	if err != nil {
+		log.Fatalf("Error: %s\n", err.Error())
+	}
+
+	http.Handle("GET /", middleware.Logging(http.FileServer(http.FS(siteFS))))
 
 	log.Printf("Listening on http://%s:%s\n", address, port)
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), nil); err != nil {
