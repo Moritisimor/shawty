@@ -34,7 +34,8 @@ func PostAliasHandler(repo *repo.URLAliasRepo) http.HandlerFunc {
 			return
 		}
 
-		if err := repo.PostURLAlias(dto, r.Context()); err != nil {
+		id, err := repo.PostURLAlias(dto, r.Context()) 
+		if err != nil {
 			if errors.Is(err, sqlite3.CONSTRAINT) {
 				helpers.SendJSON(w, http.StatusConflict, helpers.J{
 					"error": "Alias already taken",
@@ -47,5 +48,9 @@ func PostAliasHandler(repo *repo.URLAliasRepo) http.HandlerFunc {
 
 			return
 		}
+
+		helpers.SendJSON(w, http.StatusOK, helpers.J{
+			"id": id,
+		})
 	}
 }

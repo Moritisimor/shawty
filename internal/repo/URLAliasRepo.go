@@ -30,3 +30,7 @@ func New(path string) (*URLAliasRepo, error) {
 		db: db,
 	}, nil
 }
+
+func (u *URLAliasRepo) Close() error {
+	return u.db.Close()
+} 

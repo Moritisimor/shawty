@@ -7,7 +7,7 @@ import (
 )
 
 func (u *URLAliasRepo) GetURLAliasByID(
-	queryID uint, 
+	queryID uint,
 	ctx context.Context,
 ) (models.URLAlias, error) {
 	row := u.db.QueryRowContext(
