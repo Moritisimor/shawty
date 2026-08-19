@@ -36,6 +36,6 @@ sendButton.addEventListener("click", () => {
 
         return res.json();
     })
-    .then((json) => alert(`Successfully posted alias.\nID: ${json["id"]}\nURL: ${serverURL}api/link/${alias}`))
+    .then((json) => alert(`Successfully posted alias.\nID: ${json["id"]}\nURL: ${serverURL}link/${alias}`))
     .catch((err) => alert(`Error while posting: ${err}`));
 });
