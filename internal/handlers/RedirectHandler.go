@@ -10,7 +10,6 @@ import (
 	"github.com/Moritisimor/shawty/internal/repo"
 )
 
-// /api/link/{link}
 func RedirectHandler(repo *repo.URLAliasRepo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		short := r.PathValue("link")

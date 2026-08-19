@@ -11,7 +11,6 @@ import (
 	"github.com/ncruces/go-sqlite3"
 )
 
-// POST /api/alias
 func PostAliasHandler(repo *repo.URLAliasRepo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()

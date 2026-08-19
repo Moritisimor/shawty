@@ -26,8 +26,10 @@ func main() {
 	defer repo.Close()
 
 	http.Handle("GET /api/status", middleware.Logging(handlers.StatusHandler))
-	http.Handle("GET /api/link/{link}", middleware.Logging(handlers.RedirectHandler(repo)))
+	http.Handle("GET /link/{link}", middleware.Logging(handlers.RedirectHandler(repo)))
 	http.Handle("POST /api/alias", middleware.Logging(handlers.PostAliasHandler(repo)))
+
+	http.Handle("/", http.FileServer(http.Dir("./static")))
 
 	log.Printf("Listening on http://%s:%s\n", address, port)
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), nil); err != nil {

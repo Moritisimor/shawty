@@ -1,0 +1,23 @@
+html {
+    text-align: center;
+    background-color: rgb(50, 50, 50);
+    color: white;
+    font-family: monospace;
+}
+
+a {
+    color: white
+}
+
+.area {
+    margin-top: 2%;
+    border: solid black; 
+    background-color: rgb(30, 30, 30);
+    display: inline-block;
+    padding: 1%; 
+    border-radius: 35px;
+}
+
+.area textarea {
+    border-radius: 10px;
+}
