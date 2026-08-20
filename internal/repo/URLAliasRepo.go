@@ -22,7 +22,7 @@ func New(path string, deleteAfterHours int64) (*URLAliasRepo, error) {
 			ID INTEGER PRIMARY KEY,
 			Alias TEXT UNIQUE NOT NULL,
 			URL TEXT NOT NULL,
-			DeleteAt INTEGER NOT NULL
+			DeleteAt INTEGER
 		)`,
 	); err != nil {
 		return nil, fmt.Errorf("Error while migrating: %s", err)
