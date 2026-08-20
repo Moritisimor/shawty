@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	_ "embed"
 	"fmt"
 	"io/fs"
 	"log"
@@ -34,12 +33,15 @@ func main() {
 	}
 
 	log.Printf("Using database '%s'\n", dbPath)
+	log.Printf("Listening on http://%s:%s\n", address, port)
+	log.Printf("Aliases are deleted after %d hours\n", deleteAfterHours)
+	log.Printf("Cleaner Goroutine runs once every %d minutes\n", sleepTimeMins)
+
 	repo, err := repo.New(dbPath, deleteAfterHours)
 	if err != nil {
 		log.Fatalf("%s\n", err.Error())
 	}
 
-	log.Printf("Connecting to database and migration successful\n")
 	defer repo.Close()
 
 	http.Handle("GET /api/status", middleware.Logging(http.HandlerFunc(handlers.StatusHandler)))
@@ -55,7 +57,6 @@ func main() {
 
 	helpers.StartCleanerRoutine(repo, sleepTimeMins)
 
-	log.Printf("Listening on http://%s:%s\n", address, port)
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), nil); err != nil {
 		log.Fatalf("Error while listening: %s\n", err.Error())
 	}

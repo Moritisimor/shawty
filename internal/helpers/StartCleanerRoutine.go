@@ -13,24 +13,24 @@ func StartCleanerRoutine(r *repo.URLAliasRepo, sleepTimeMinutes int) {
 
 	go func() {
 		for {
+			time.Sleep(time.Minute * time.Duration(sleepTimeMinutes))
 			log.Println("Cleaner Routine Running!")
 
-			aliases, err := r.GetAllAliases(ctx)
+			aliases, err := r.GetAllExpiredAliasIDs(ctx)
 			if err != nil {
-				log.Printf("Error while getting aliases: %s\nThis may be worth investigating\n", err.Error())
+				log.Printf("Error while getting aliases: %s\n", err.Error())
+				continue
 			}
 
 			rn := time.Now().Unix()
-			for _, alias := range aliases {
-				if alias.DeleteAt <= rn {
-					if err := r.DeleteAliasWithID(alias.ID, ctx); err != nil {
-						log.Printf("Error while deleting alias: %s\nThis may be worth investigating\n", err.Error())
-					}
+			for _, id := range aliases {
+				if err := r.DeleteAliasWithID(id, ctx); err != nil {
+					log.Printf("Error while deleting alias: %s", err.Error())
+					continue
 				}
 			}
 
 			log.Printf("Cleaning done! Took %d milliseconds.\n", time.Now().UnixMilli() - rn * 1000)
-			time.Sleep(time.Minute * time.Duration(sleepTimeMinutes))
 		}
 	}()
 }
