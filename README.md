@@ -23,6 +23,34 @@ Now to run it:
 
 Try visiting `http://localhost:8080` in your browser!
 
+## Environment Variables
+You can set a couple of environment variables before running the application for a bit of configuration.
+
+### DB_PATH
+This is the path for the SQLite3 database that is to be used.
+
+Usually, this is set to `./shawty.db`.
+
+### PORT
+The port on which the server listens.
+
+Usually, this is set to `8080`.
+
+### ADDRESS
+This is the bind-address for the server.
+
+Usually, this is set to `0.0.0.0`.
+
+### DELETE_AFTER_HOURS
+This is how long a URL-Alias may exist after its creation.
+
+Usually, this is set to `24`.
+
+### SLEEP_TIME_MINS
+This is how often the cleaner goroutine runs, deleting expired Aliases.
+
+Usually, this is set to `20`.
+
 ## REST Endpoints
 These are the REST endpoints of the application.
 
