@@ -46,10 +46,14 @@ This is how long a URL-Alias may exist after its creation.
 
 Usually, this is set to `24`.
 
+If this is set to 0 or below, aliases are never deleted.
+
 ### SLEEP_TIME_MINS
 This is how often the cleaner goroutine runs, deleting expired Aliases.
 
 Usually, this is set to `20`.
+
+If this is set to 0 or below, the cleaner goroutine will never run.
 
 ## REST Endpoints
 These are the REST endpoints of the application.
